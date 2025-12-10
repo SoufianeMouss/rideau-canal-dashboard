@@ -41,21 +41,34 @@ app.get("/api/latest", async (req, res) => {
       if (resources.length > 0) {
         const doc = resources[0];
 
-        // 🔹 Normalize and send only what the frontend needs
+        // 🔹 Recalculate safetyStatus here instead of trusting Cosmos
+        const avgIce = Number(doc.avgIceThicknessCm);
+        const avgSurface = Number(doc.avgSurfaceTempC);
+
+        let safetyStatus;
+        if (avgIce >= 30 && avgSurface <= -2) {
+          safetyStatus = "Safe";
+        } else if (avgIce >= 25 && avgSurface <= 0) {
+          safetyStatus = "Caution";
+        } else {
+          safetyStatus = "Unsafe";
+        }
+
+        // 🔹 Normalize the object we send to the frontend
         results[loc] = {
           location: doc.location,
           windowEnd: doc.windowEnd,
-          avgIceThicknessCm: Number(doc.avgIceThicknessCm),
+          avgIceThicknessCm: avgIce,
           minIceThicknessCm: Number(doc.minIceThicknessCm),
           maxIceThicknessCm: Number(doc.maxIceThicknessCm),
-          avgSurfaceTempC: Number(doc.avgSurfaceTempC),
+          avgSurfaceTempC: avgSurface,
           minSurfaceTempC: Number(doc.minSurfaceTempC),
           maxSurfaceTempC: Number(doc.maxSurfaceTempC),
           maxSnowAccumulationCm: Number(doc.maxSnowAccumulationCm),
           avgExternalTempC: Number(doc.avgExternalTempC),
           readingCount: Number(doc.readingCount),
-          // 👇 force safetyStatus to be a plain string
-          safetyStatus: String(doc.safetyStatus)
+          // 👇 Now guaranteed to be a plain string
+          safetyStatus,
         };
       }
     }
@@ -66,6 +79,7 @@ app.get("/api/latest", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
 
 
 /**

@@ -22,6 +22,15 @@ function safetyBadge(status) {
   return `<span class="badge ${cls}">${status}</span>`;
 }
 
+function computeSafetyStatus(iceThickness, surfaceTemp) {
+  if (iceThickness >= 30 && surfaceTemp <= -2) {
+    return "Safe";
+  } else if (iceThickness >= 25 && surfaceTemp <= 0) {
+    return "Caution";
+  } else {
+    return "Unsafe";
+  }
+}
 
 function renderCards(latest) {
   const mapping = [
@@ -39,21 +48,18 @@ function renderCards(latest) {
       return;
     }
 
-    // 🔹 Normalize safetyStatus to a string
-    const rawStatus = data.safetyStatus;
-    const status =
-      typeof rawStatus === "string"
-        ? rawStatus
-        : rawStatus && typeof rawStatus === "object" && "value" in rawStatus
-        ? rawStatus.value
-        : String(rawStatus);
+    // ✅ Compute safety status on the client, ignore whatever came from Cosmos
+    const status = computeSafetyStatus(
+      Number(data.avgIceThicknessCm),
+      Number(data.avgSurfaceTempC)
+    );
 
     el.innerHTML = `
       <h2>${label}</h2>
-      <p>Ice thickness: ${data.avgIceThicknessCm.toFixed(1)} cm</p>
-      <p>Surface temp: ${data.avgSurfaceTempC.toFixed(1)} °C</p>
-      <p>External temp: ${data.avgExternalTempC.toFixed(1)} °C</p>
-      <p>Snow: ${data.maxSnowAccumulationCm.toFixed(1)} cm</p>
+      <p>Ice thickness: ${Number(data.avgIceThicknessCm).toFixed(1)} cm</p>
+      <p>Surface temp: ${Number(data.avgSurfaceTempC).toFixed(1)} °C</p>
+      <p>External temp: ${Number(data.avgExternalTempC).toFixed(1)} °C</p>
+      <p>Snow: ${Number(data.maxSnowAccumulationCm).toFixed(1)} cm</p>
       <p>Status: ${safetyBadge(status)}</p>
       <small>Window end: ${new Date(data.windowEnd).toLocaleTimeString()}</small>
     `;
