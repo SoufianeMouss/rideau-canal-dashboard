@@ -11,18 +11,23 @@ async function fetchHistory() {
 }
 
 function safetyBadge(status) {
+  // 🔹 Make sure this ALWAYS returns a STRING of HTML, not a DOM element
   const cls =
-    status === "Safe" ? "badge-safe" :
-    status === "Caution" ? "badge-caution" :
-    "badge-unsafe";
+    status === "Safe"
+      ? "badge-safe"
+      : status === "Caution"
+      ? "badge-caution"
+      : "badge-unsafe";
+
   return `<span class="badge ${cls}">${status}</span>`;
 }
+
 
 function renderCards(latest) {
   const mapping = [
     { id: "card-dows", key: "DowsLake", label: "Dow's Lake" },
     { id: "card-fifth", key: "FifthAvenue", label: "Fifth Avenue" },
-    { id: "card-nac", key: "NAC", label: "NAC" }
+    { id: "card-nac", key: "NAC", label: "NAC" },
   ];
 
   mapping.forEach(({ id, key, label }) => {
@@ -34,14 +39,14 @@ function renderCards(latest) {
       return;
     }
 
-    // 🔹 Normalise safetyStatus: handle string OR object
+    // 🔹 Normalize safetyStatus to a string
     const rawStatus = data.safetyStatus;
     const status =
       typeof rawStatus === "string"
         ? rawStatus
         : rawStatus && typeof rawStatus === "object" && "value" in rawStatus
-          ? rawStatus.value
-          : String(rawStatus);
+        ? rawStatus.value
+        : String(rawStatus);
 
     el.innerHTML = `
       <h2>${label}</h2>
