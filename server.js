@@ -37,8 +37,26 @@ app.get("/api/latest", async (req, res) => {
       const { resources } = await container.items
         .query(query, { enableCrossPartitionQuery: true })
         .fetchAll();
+
       if (resources.length > 0) {
-        results[loc] = resources[0];
+        const doc = resources[0];
+
+        // 🔹 Normalize and send only what the frontend needs
+        results[loc] = {
+          location: doc.location,
+          windowEnd: doc.windowEnd,
+          avgIceThicknessCm: Number(doc.avgIceThicknessCm),
+          minIceThicknessCm: Number(doc.minIceThicknessCm),
+          maxIceThicknessCm: Number(doc.maxIceThicknessCm),
+          avgSurfaceTempC: Number(doc.avgSurfaceTempC),
+          minSurfaceTempC: Number(doc.minSurfaceTempC),
+          maxSurfaceTempC: Number(doc.maxSurfaceTempC),
+          maxSnowAccumulationCm: Number(doc.maxSnowAccumulationCm),
+          avgExternalTempC: Number(doc.avgExternalTempC),
+          readingCount: Number(doc.readingCount),
+          // 👇 force safetyStatus to be a plain string
+          safetyStatus: String(doc.safetyStatus)
+        };
       }
     }
 
@@ -48,6 +66,7 @@ app.get("/api/latest", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
 
 /**
  * Get last hour history per location (for charts).
