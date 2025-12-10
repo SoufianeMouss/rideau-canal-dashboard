@@ -34,13 +34,22 @@ function renderCards(latest) {
       return;
     }
 
+    // 🔹 Normalise safetyStatus: handle string OR object
+    const rawStatus = data.safetyStatus;
+    const status =
+      typeof rawStatus === "string"
+        ? rawStatus
+        : rawStatus && typeof rawStatus === "object" && "value" in rawStatus
+          ? rawStatus.value
+          : String(rawStatus);
+
     el.innerHTML = `
       <h2>${label}</h2>
       <p>Ice thickness: ${data.avgIceThicknessCm.toFixed(1)} cm</p>
       <p>Surface temp: ${data.avgSurfaceTempC.toFixed(1)} °C</p>
       <p>External temp: ${data.avgExternalTempC.toFixed(1)} °C</p>
       <p>Snow: ${data.maxSnowAccumulationCm.toFixed(1)} cm</p>
-      <p>Status: ${safetyBadge(data.safetyStatus)}</p>
+      <p>Status: ${safetyBadge(status)}</p>
       <small>Window end: ${new Date(data.windowEnd).toLocaleTimeString()}</small>
     `;
   });
