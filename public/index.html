@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Rideau Canal Skateway – Live Monitoring</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <!-- Top header / banner -->
+  <header>
+    <div class="header-left">
+      <h1>Rideau Canal Skateway – Monitoring Dashboard</h1>
+      <p class="subtitle">
+        Real-time ice and weather conditions for Dow's Lake, Fifth Avenue, and NAC
+      </p>
+    </div>
+    <div class="header-right">
+      <span class="status-dot"></span>
+      <span class="status-text">Streaming Active</span>
+    </div>
+  </header>
+
+  <!-- Overall status / info bar -->
+  <div id="overall-status">
+    <p>
+      Data refreshes automatically every <strong>30 seconds</strong>.
+      Make sure your sensor simulator is running to see live updates.
+    </p>
+  </div>
+
+  <!-- Location cards -->
+  <main>
+    <section id="locations-section">
+      <h2>Location Conditions</h2>
+      <div id="cards">
+        <div class="card" id="card-dows">
+          <!-- Filled dynamically by app.js -->
+          <h2>Dow's Lake</h2>
+          <p>Waiting for data...</p>
+        </div>
+        <div class="card" id="card-fifth">
+          <!-- Filled dynamically by app.js -->
+          <h2>Fifth Avenue</h2>
+          <p>Waiting for data...</p>
+        </div>
+        <div class="card" id="card-nac">
+          <!-- Filled dynamically by app.js -->
+          <h2>NAC</h2>
+          <p>Waiting for data...</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Historical trend chart -->
+    <section id="charts-section">
+      <h2>Last Hour – Ice Thickness Trend</h2>
+      <p class="section-description">
+        Each point represents a 5-minute aggregation window from Azure Stream Analytics.
+      </p>
+      <canvas id="iceThicknessChart"></canvas>
+    </section>
+  </main>
+
+  <!-- Simple footer -->
+  <footer>
+    <p>
+      CST8916 – Remote Data &amp; Real-time Applications ·
+      Rideau Canal Skateway Monitoring ·
+      Built with Azure IoT Hub, Stream Analytics, Cosmos DB &amp; App Service
+    </p>
+  </footer>
+
+  <!-- App logic -->
+  <script src="app.js"></script>
+</body>
+</html>

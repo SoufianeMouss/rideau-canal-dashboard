@@ -1,0 +1,29 @@
+# Node dependencies
+node_modules/
+
+# Environment variables (sensitive)
+.env
+*.env
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# Build artifacts (if using bundlers later)
+dist/
+build/
+
+# OS / Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+
+# Temporary files
+*.tmp
+*.bak
+
+# Lock files (optional to ignore — your choice)
+# package-lock.json
+# yarn.lock
